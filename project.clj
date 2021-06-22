@@ -30,10 +30,9 @@
    "check-namespace-decls"             ["with-profile" "+check-namespace-decls" "check-namespace-decls"]
    "eastwood"                          ["with-profile" "+eastwood" "eastwood"]
    "check-reflection-warnings"         ["with-profile" "+reflection-warnings" "check"]
-   "docstring-checker"                 ["with-profile" "+docstring-checker" "docstring-checker"]
    "cloverage"                         ["with-profile" "+cloverage" "cloverage"]
    ;; `lein lint` will run all linters
-   "lint"                              ["do" ["eastwood"] ["bikeshed"] ["check-namespace-decls"] ["docstring-checker"] ["cloverage"]]
+   "lint"                              ["do" ["eastwood"] ["bikeshed"] ["check-namespace-decls"] ["cloverage"]]
    "repl"                              ["with-profile" "+repl" "repl"]
    "repl-ee"                           ["with-profile" "+repl,+ee" "repl"]
    "uberjar"                           ["uberjar"]
@@ -406,17 +405,6 @@
    [:include-all-drivers
     :ee
     {:global-vars {*warn-on-reflection* true}}]
-
-   ;; Check that all public vars have docstrings. Run with 'lein docstring-checker'
-   :docstring-checker
-   [:linters-common
-    {:plugins
-     [[docstring-checker "1.1.0"]]
-
-     :docstring-checker
-     {:include [#"^metabase"]
-      :exclude [#"test"
-                #"^metabase\.http-client$"]}}]
 
    :check-namespace-decls
    [:linters-common
