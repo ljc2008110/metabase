@@ -35,7 +35,7 @@
    {:host     (tx/db-test-env-var-or-throw :oracle :host)
     :port     (Integer/parseInt (tx/db-test-env-var-or-throw :oracle :port "1521"))
     :user     (tx/db-test-env-var-or-throw :oracle :user)
-    :password (tx/db-test-env-var-or-throw :oracle :password)
+    :password "dp3oIp5hBgwzoTfEcTEVVBJ" ; NOCOMMIT
     :sid      (tx/db-test-env-var-or-throw :oracle :sid)
     :ssl      (tx/db-test-env-var :oracle :ssl false)}))
 
@@ -148,7 +148,8 @@
 (defn- execute! [format-string & args]
   (let [sql (apply format format-string args)]
     (println (u/format-color 'blue "[oracle] %s" sql))
-    (jdbc/execute! (dbspec) sql))
+    (jdbc/execute! (dbspec) sql)
+    (println (u/format-color 'green "    [ok]")))
   (println (u/format-color 'blue "[ok]")))
 
 (defn- clean-session-schemas! []

@@ -85,7 +85,7 @@
       :or   {host "localhost", port 1521}
       :as   details}]
   (assert (or sid service-name))
-  (let [spec      {:classname "oracle.jdbc.OracleDriver" :subprotocol "oracle:thin"}
+  (let [spec      {:classname "oracle.jdbc.OracleDriver", :subprotocol "oracle:thin"}
         finish-fn (if (:ssl details) ssl-spec non-ssl-spec)]
     (-> (merge spec details)
         (dissoc :host :port :sid :service-name :ssl)
@@ -296,6 +296,15 @@
 (defmethod sql.qp/->honeysql [:oracle Boolean]
   [_ bool]
   (if bool 1 0))
+
+;; in Oracle empty strings are considered to be `NULL`, so `WHERE field = ''` is effectively the same as writing
+;; `WHERE field = NULL`, which of course is never true. Replace empty-string values with `nil` so we generate correct
+;; SQL e.g. `WHERE field IS NOT NULL`. (See #13158)
+(defmethod sql.qp/->honeysql [:oracle :value]
+  [driver [_ value info]]
+  (let [value (when-not (= value "")
+                value)]
+    ((get-method sql.qp/->honeysql [:sql :value]) driver [:value value info])))
 
 (defmethod driver/humanize-connection-error-message :oracle
   [_ message]
