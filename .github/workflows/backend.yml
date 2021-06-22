@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: DeLaGuardo/clojure-lint-action@master
       with:
-        clj-kondo-args: --config /work/lint-config.edn --lint /work/src /work/enterprise/backend/src /work/shared/src
+        clj-kondo-args: --config lint-config.edn --lint src enterprise/backend/src shared/src
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
   be-linter-bikeshed:
