@@ -136,6 +136,15 @@ describe("schema_metadata", () => {
         verboseName: "Between",
       });
     });
+
+    it("should have 'between' filter operator for the coordinate type", () => {
+      expect(getOperatorByTypeAndName(COORDINATE, "between")).toEqual({
+        name: "between",
+        numFields: 2,
+        validArgumentsFilters: [expect.any(Function), expect.any(Function)],
+        verboseName: "Between",
+      });
+    });
   });
 
   describe("isFuzzyOperator", () => {
