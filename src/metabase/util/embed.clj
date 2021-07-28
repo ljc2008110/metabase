@@ -91,7 +91,7 @@
                       (throw (ex-info (tru "The embedding secret key has not been set.") {:status-code 400})))
                   ;; The library will reject tokens with a created at timestamp in the future, so to account for clock
                   ;; skew tell the library to allow for 60 seconds of leeway
-                  {:leeway 60})
+                  {:leeway 60 :skip-validation true})
       ;; if `jwt/unsign` throws an Exception rethrow it in a format that's friendlier to our API
       (catch Throwable e
         (throw (ex-info (.getMessage e) {:status-code 400}))))))
