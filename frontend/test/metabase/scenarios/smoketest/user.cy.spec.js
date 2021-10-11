@@ -5,7 +5,7 @@ describe("smoketest > user", () => {
   before(restore);
   beforeEach(cy.signInAsNormalUser);
 
-  it("should be able to ask a custom questions", () => {
+  it("should be able to ask a custom question", () => {
     cy.visit("/");
     cy.findByText("Ask a question").click();
     cy.findByText("Custom question").click();
@@ -184,51 +184,6 @@ describe("smoketest > user", () => {
 
     cy.get("svg");
     cy.findAllByText("Created At");
-  });
-
-  /**
-   * NOTE: - There is a HIGH chance that there are still references to the old "drill-through"/actions popover
-   *         among the skipped tests. Because of the urgency to fix smoke tests (2020-11-26) there is not enough
-   *         time to fully commit to cleaning skipped tests as well.
-   *
-   *       - In general, all smoke tests need serious refactoring
-   *
-   * TODO: - Once that work starts, make sure to update obsolete references in popover!
-   */
-
-  it.skip("should be able to create custom columns in the notebook editor", () => {
-    cy.icon("notebook").click();
-
-    // Delete last summary
-    cy.findAllByText("Count")
-      .first()
-      .click(70, 20);
-
-    // Switch table from Product to Orders
-
-    cy.findAllByText("Products")
-      .last()
-      .click();
-    cy.findByText("Orders").click();
-
-    // Create custom column
-    cy.icon("add_data").click();
-    cy.findByText("Product → Price").click();
-    cy.findByText("-").click();
-    cy.findByText("Subtotal").click();
-    cy.get(".PopoverBody")
-      .first()
-      .click();
-    cy.get("input[placeholder='Something nice and descriptive']").type(
-      "Demo Column",
-    );
-    cy.findByText("Done").click();
-    cy.button("Visualize").click();
-
-    cy.findByText("ID");
-    cy.icon("table2");
-    cy.wait(1000).findByText("Demo Column");
-    cy.findByText("Products").should("not.exist");
   });
 
   it.skip("should be able to use all notebook editor functions", () => {

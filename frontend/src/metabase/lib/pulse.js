@@ -4,10 +4,41 @@ import {
   hasParameterValue,
 } from "metabase/meta/Parameter";
 
+export const NEW_PULSE_TEMPLATE = {
+  name: null,
+  cards: [],
+  channels: [],
+  skip_if_empty: false,
+  collection_id: null,
+  parameters: [],
+};
+
 export function channelIsValid(channel, channelSpec) {
   if (!channelSpec) {
     return false;
   }
+
+  if (channelSpec.recipients) {
+    // default from formInput is an empty array, not a null array
+    // check for both
+    if (!channel.recipients || channel.recipients.length < 1) {
+      return false;
+    }
+  }
+
+  if (channelSpec.fields) {
+    for (const field of channelSpec.fields) {
+      if (
+        field.required &&
+        channel.details &&
+        (channel.details[field.name] == null ||
+          channel.details[field.name] === "")
+      ) {
+        return false;
+      }
+    }
+  }
+
   switch (channel.schedule_type) {
     case "monthly":
       if (channel.schedule_frame != null && channel.schedule_hour != null) {
@@ -30,25 +61,7 @@ export function channelIsValid(channel, channelSpec) {
     default:
       return false;
   }
-  if (channelSpec.recipients) {
-    // default from formInput is an empty array, not a null array
-    // check for both
-    if (!channel.recipients || channel.recipients.length < 1) {
-      return false;
-    }
-  }
-  if (channelSpec.fields) {
-    for (const field of channelSpec.fields) {
-      if (
-        field.required &&
-        channel.details &&
-        (channel.details[field.name] == null ||
-          channel.details[field.name] === "")
-      ) {
-        return false;
-      }
-    }
-  }
+
   return true;
 }
 
@@ -136,7 +149,7 @@ export function getActivePulseParameters(pulse, parameters) {
 
       return {
         ...parameter,
-        value: hasParameterValue(pulseParameter)
+        value: hasParameterValue(pulseParameter?.value)
           ? pulseParameter.value
           : parameter.default,
       };

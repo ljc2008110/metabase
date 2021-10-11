@@ -41,7 +41,7 @@ const filter = {
 
 const dashboardDetails = { parameters: [filter] };
 
-describe.skip("issue 17514", () => {
+describe("issue 17514", () => {
   beforeEach(() => {
     restore();
     cy.signInAsAdmin();
@@ -50,8 +50,8 @@ describe.skip("issue 17514", () => {
   describe("scenario 1", () => {
     beforeEach(() => {
       cy.createQuestionAndDashboard({ questionDetails, dashboardDetails }).then(
-        ({ body: oldCard }) => {
-          const { card_id, dashboard_id } = oldCard;
+        ({ body: card }) => {
+          const { card_id, dashboard_id } = card;
 
           cy.intercept("POST", `/api/card/${card_id}/query`).as("cardQuery");
 
@@ -65,7 +65,7 @@ describe.skip("issue 17514", () => {
             ],
           };
 
-          cy.editDashboardCard(oldCard, mapFilterToCard);
+          cy.editDashboardCard(card, mapFilterToCard);
 
           cy.visit(`/dashboard/${dashboard_id}`);
 
@@ -167,7 +167,7 @@ function openNotebookMode() {
 function removeJoinedTable() {
   cy.findAllByText("Join data")
     .parent()
-    .find(".Icon-close")
+    .findByTestId("remove-step")
     .click({ force: true });
 }
 
